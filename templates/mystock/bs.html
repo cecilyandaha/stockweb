@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>开始使用layui</title>
+  <link rel="stylesheet" href="../../static/mystock/layui/css/layui.css">
+    <script src="../../static/mystock/layui/layui.js"></script>
+</head>
+<body>
+
+<!-- 你的HTML代码 -->
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">单股数据对比</li>
+    <li>多股数据比较</li>
+
+  </ul>
+  <div class="layui-tab-content" style="height: 1000px;">
+    <div class="layui-tab-item layui-show">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <legend>方框风格的表单集合</legend>
+        </fieldset>
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">股票名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+                <div id="test3" class="demo-transfer"></div>
+                <div><button class="layui-btn" lay-submit="" lay-filter="demo2" id="transferBtn">查询</button></div>
+            </div>
+
+        </form>
+
+
+    </div>
+    <div class="layui-tab-item">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>显示搜索框</legend>
+        </fieldset>
+        <div id="test4" class="demo-transfer"></div>
+
+    </div>
+  </div>
+</div>
+<script>
+layui.use('element', function(){
+  var $ = layui.jquery
+  ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+  //触发事件
+  var active = {
+    tabAdd: function(){
+      //新增一个Tab项
+      element.tabAdd('demo', {
+        title: '新选项'+ (Math.random()*1000|0) //用于演示
+        ,content: '内容'+ (Math.random()*1000|0)
+        ,id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
+      })
+    }
+    ,tabDelete: function(othis){
+      //删除指定Tab项
+      element.tabDelete('demo', '44'); //删除：“商品管理”
+
+
+      othis.addClass('layui-btn-disabled');
+    }
+    ,tabChange: function(){
+      //切换到指定Tab项
+      element.tabChange('demo', '22'); //切换到：用户管理
+    }
+  };
+
+  $('.site-demo-active').on('click', function(){
+    var othis = $(this), type = othis.data('type');
+    active[type] ? active[type].call(this, othis) : '';
+  });
+
+  //Hash地址的定位
+  var layid = location.hash.replace(/^#test=/, '');
+  element.tabChange('test', layid);
+
+  element.on('tab(test)', function(elem){
+    location.hash = 'test='+ $(this).attr('lay-id');
+  });
+
+});
+</script>
+
+<!-- 穿梭框 -->
+<script>
+layui.use(['transfer', 'layer', 'util'], function(){
+  var $ = layui.$
+  ,transfer = layui.transfer
+  ,layer = layui.layer
+  ,util = layui.util;
+  var data1 = JSON.parse('{{ datalist|safe }}');
+  //模拟数据
+  //var data1 = [
+  //  {"value": "1", "title": "李白"}
+  //  ,{"value": "2", "title": "杜甫"}
+  //  ,{"value": "3", "title": "苏轼"}
+  //  ,{"value": "4", "title": "李清照"}
+  //  ,{"value": "5", "title": "鲁迅"}
+  //  ,{"value": "6", "title": "巴金"}
+  //  ,{"value": "7", "title": "冰心"}
+  //  ,{"value": "8", "title": "矛盾"}
+  //  ,{"value": "9", "title": "贤心"}
+  //]
+
+
+
+  //单股
+ transfer.render({
+     elem: '#test3'
+     ,data: data1['data_1']
+     ,title: ['全选', '已选定']
+     ,id:'test3'
+     ,showSearch: true
+  })
+
+    //多股
+ transfer.render({
+    elem: '#test4'
+    ,data: data1['data_2']
+    ,title: ['全选', '已选定']
+    ,showSearch: true
+  })
+
+  $("#transferBtn").on('click', function(){
+      alert(JSON.stringify(transfer.getData('test3')));
+      layer.alert(JSON.stringify(transfer.getData('test3')));
+  });
+//获得右侧列表数据
+
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.3.0/echarts.min.js"></script>
+    <script src="https://cdn.staticfile.org/codemirror/5.40.2/mode/javascript/javascript.min.js"></script>
+</head>
+
+<body>
+    <div id="box" style="width: 1000px; height:800px;"></div>
+    <script>
+    // 获取到这个DOM节点，然后初始化
+    var aaa = JSON.parse('{{ datalist|safe }}');
+    alert(aaa['data']);
+    var myChart = echarts.init(document.getElementById("box"));
+
+    // option 里面的内容基本涵盖你要画的图表的所有内容
+
+
+                    var option = {
+                        backgroundColor: '#FBFBFB',
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: [aaa["name"]]
+                        },
+
+                        calculable: true,
+                         xAxis: [{
+                            axisLabel: {
+                                rotate: 30,
+                                interval: 0
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#1ECECE'
+                                }
+                            },
+                            type: 'time',
+                            boundaryGap: false,
+                            splitLine: {
+                                show: true,
+                                interval: 'auto',
+                                lineStyle: {
+                                    color: ['#ABFBFB']
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+
+                        }],
+                        yAxis: [{
+
+                            type: 'value',
+                            splitLine: {
+                                lineStyle: {
+                                    color: ['#14DFF5']
+                                }
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#2ECECE'
+                                }
+                            }
+                        }],
+
+
+                        axisTick: {
+                            show: false
+                        },
+                        series: [{
+                            name: aaa["name"],
+                            type: 'line',
+                            symbol: 'none',
+                            smooth: 0.3,
+                            color: ['#66AEDE'],
+                            // data:[800, 300, 500, 800, 300, 600,500,600]
+                            data:aaa['data'],
+                             lineStyle: {
+                                 normal: {
+                                     width: 3
+                                 }
+                             }
+
+                        }
+                        ]
+                    };
+
+    // 一定不要忘了这个，具体是干啥的我忘了，官网是这样写的使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    </script>
+</body>
+
+</html>
+
+
+
